@@ -12,6 +12,11 @@ export async function getUser(): Promise<User | null> {
   return data ? JSON.parse(data) : null;
 }
 
-export async function logout() {
-  await AsyncStorage.removeItem(USER_KEY);
+export async function verifyUser(email: string, senha: string): Promise<User | null> {
+  const user = await getUser();
+  if (user && user.email === email && user.senha === senha) {
+    return user;
+  }
+  return null;
 }
+

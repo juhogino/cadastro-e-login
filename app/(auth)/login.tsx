@@ -1,7 +1,8 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useContext } from "react";
-import { AuthContext } from "../../src/context/AuthContext";
+import { AuthContext } from "@/src/context/AuthContext";
+import { verifyUser } from "@/src/storage/authStorage";
 
 export default function Login() {
   const router = useRouter();
@@ -16,12 +17,15 @@ export default function Login() {
       return;
     }
 
-    await login({
-      email,
-      senha,
-      tipo: "usuario",
-      regiao: "Centro-Oeste",
-    });
+    const user = await verifyUser(email, senha);
+
+    if (!user) {
+      alert("E-mail ou senha incorretos");
+      return;
+    }
+
+    login(user);
+    router.replace("/(app)/home");
   }
 
   return (

@@ -1,9 +1,16 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { useContext } from "react";
-import { AuthContext } from "../../src/context/AuthContext";
+import { useRouter } from "expo-router";
+import { AuthContext } from "@/src/context/AuthContext";
 
 export default function Home() {
+  const router = useRouter();
   const { user, logout } = useContext(AuthContext);
+
+  function handleLogout() {
+    logout();
+    router.replace("/(auth)/login");
+  }
 
   return (
     <View style={{ flex: 1, padding: 24, backgroundColor: "#F9FAFB" }}>
@@ -30,7 +37,7 @@ export default function Home() {
           borderRadius: 12,
           alignItems: "center"
         }}
-        onPress={logout}
+        onPress={handleLogout}
       >
         <Text style={{ color: "#FFF" }}>Sair</Text>
       </TouchableOpacity>

@@ -1,17 +1,18 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useContext } from "react";
-import { AuthContext } from "../../src/context/AuthContext";
+import { AuthContext } from "@/src/context/AuthContext";
+import { UserType } from "@/src/types/User";
 
 export default function Register() {
   const router = useRouter();
-  const { login } = useContext(AuthContext);
+  const { register } = useContext(AuthContext);
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmar, setConfirmar] = useState("");
-  const [tipo, setTipo] = useState("usuario");
+  const [tipo, setTipo] = useState<UserType>("usuario");
   const [regiao, setRegiao] = useState("");
 
   async function handleRegister() {
@@ -25,7 +26,8 @@ export default function Register() {
       return;
     }
 
-    await login({ nome, email, senha, tipo, regiao });
+    await register({ nome, email, senha, tipo, regiao });
+    router.replace("/(auth)/login");
   }
 
   return (
