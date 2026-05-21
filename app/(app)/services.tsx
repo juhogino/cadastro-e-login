@@ -33,9 +33,26 @@ export default function Services() {
         data={services}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() =>
+              router.push({
+                pathname: "/(app)/service/[id]",
+                params: {
+                  id: item.id,
+                  titulo: item.titulo,
+                  descricao: item.descricao,
+                  categoria: item.categoria,
+                  preco: item.preco,
+                  telefone: item.telefone,
+                  regiao: item.regiao,
+                  prestadorEmail: item.prestadorEmail,
+                },
+              })
+            }
+          >
             <Text style={styles.name}>{item.titulo}</Text>
-            <Text style={styles.description}>{item.descricao}</Text>
+            <Text style={styles.description} numberOfLines={2}>{item.descricao}</Text>
 
             <View style={styles.detailRow}>
               <Ionicons name="folder-outline" size={15} color="#64748B" />
@@ -48,20 +65,10 @@ export default function Services() {
             </View>
 
             <View style={styles.detailRow}>
-              <Ionicons name="call-outline" size={15} color="#64748B" />
-              <Text style={styles.detail}>{item.telefone}</Text>
-            </View>
-
-            <View style={styles.detailRow}>
               <Ionicons name="location-outline" size={15} color="#64748B" />
               <Text style={styles.detail}>{item.regiao}</Text>
             </View>
-
-            <View style={styles.detailRow}>
-              <Ionicons name="mail-outline" size={15} color="#64748B" />
-              <Text style={styles.detail}>{item.prestadorEmail}</Text>
-            </View>
-          </View>
+          </TouchableOpacity>
         )}
         ListEmptyComponent={
           <View style={styles.empty}>
