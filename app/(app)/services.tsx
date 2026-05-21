@@ -2,34 +2,36 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { getServices } from "@/src/storage/serviceStorage";
 import { Service } from "@/src/types/Service";
 
 export default function Services() {
+  const router = useRouter();
   const [services, setServices] = useState<Service[]>([]);
 
-  async function loadServices() {
-    const data = await getServices();
-    setServices(data);
-  }
-
-  useEffect(() => {
-    loadServices();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getServices().then(setServices);
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>
-        Serviços Disponíveis
-      </Text>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Ionicons name="chevron-back" size={24} color="#1E3A8A" />
+      </TouchableOpacity>
+
+      <Text style={styles.title}>Serviços Disponíveis</Text>
 
       <FlatList
         data={services}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.name}>{item.titulo}</Text>
@@ -61,6 +63,12 @@ export default function Services() {
             </View>
           </View>
         )}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <Ionicons name="search-outline" size={40} color="#94A3B8" />
+            <Text style={styles.emptyText}>Nenhum serviço disponível</Text>
+          </View>
+        }
       />
     </View>
   );
@@ -72,13 +80,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEF2FF",
     padding: 24,
   },
+  backButton: {
+    alignSelf: "flex-start",
+    padding: 4,
+    marginTop: 40,
+  },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#1E3A8A",
     textAlign: "center",
     marginBottom: 20,
-    marginTop: 40,
+    marginTop: 12,
   },
   card: {
     backgroundColor: "#fff",
@@ -107,5 +120,14 @@ const styles = StyleSheet.create({
   detail: {
     color: "#334155",
     fontSize: 14,
+  },
+  empty: {
+    alignItems: "center",
+    marginTop: 60,
+    gap: 12,
+  },
+  emptyText: {
+    color: "#94A3B8",
+    fontSize: 16,
   },
 });

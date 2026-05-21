@@ -1,23 +1,49 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Service } from "../types/Service";
-
-const STORAGE_KEY = "@services";
-
-export async function saveService(service: Service) {
-  const services = await getServices();
-
-  services.push(service);
-
-  await AsyncStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(services)
-  );
-}
+import { API_URL } from "../config/api";
+import { NewService, Service } from "../types/Service";
 
 export async function getServices(): Promise<Service[]> {
-  const data = await AsyncStorage.getItem(STORAGE_KEY);
+  const response = await fetch(`${API_URL}/services`);
+  if (!response.ok) return [];
+  return response.json();
+}
 
-  if (!data) return [];
+export async function saveService(service: NewService): Promise<Service> {
+  const response = await fetch(`${API_URL}/services`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(service),
+  });
 
-  return JSON.parse(data);
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message ?? "Erro ao cadastrar serviço");
+  }
+
+  return response.json();
+}
+
+export async function updateService(id: number, data: Partial<NewService>): Promise<Service> {
+  const response = await fetch(`${API_URL}/services/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message ?? "Erro ao atualizar serviço");
+  }
+
+  return response.json();
+}
+
+export async function deleteService(id: number): Promise<void> {
+  const response = await fetch(`${API_URL}/services/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message ?? "Erro ao excluir serviço");
+  }
 }

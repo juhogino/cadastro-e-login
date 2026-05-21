@@ -1,5 +1,5 @@
 export interface Service {
-  id: string;
+  id: number;
   titulo: string;
   descricao: string;
   categoria: string;
@@ -8,3 +8,5 @@ export interface Service {
   regiao: string;
   prestadorEmail: string;
 }
+
+export type NewService = Omit<Service, "id">;

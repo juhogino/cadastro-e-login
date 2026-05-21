@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -27,12 +27,21 @@ export default function Register() {
       return;
     }
 
-    await register({ nome, email, senha, tipo, regiao });
-    router.replace("/(auth)/login");
+    try {
+      await register({ nome, email, senha, tipo, regiao });
+      router.replace("/(auth)/login");
+    } catch (error: any) {
+      alert(error.message ?? "Erro ao cadastrar");
+    }
   }
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Ionicons name="chevron-back" size={24} color="#1E3A8A" />
+      </TouchableOpacity>
+
+      <ScrollView contentContainerStyle={styles.form} showsVerticalScrollIndicator={false}>
       <Text style={styles.title}>Cadastro</Text>
 
       <View style={styles.inputWrapper}>
@@ -128,6 +137,7 @@ export default function Register() {
       <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
         <Text style={styles.link}>Já possui uma conta? Login</Text>
       </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
@@ -137,7 +147,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#EEF2FF",
     padding: 24,
-    justifyContent: "center",
+  },
+  backButton: {
+    alignSelf: "flex-start",
+    padding: 4,
+    marginTop: 40,
+  },
+  form: {
+    paddingBottom: 32,
   },
   title: {
     fontSize: 28,
