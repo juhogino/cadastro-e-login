@@ -1,12 +1,11 @@
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    View,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-
 import { useEffect, useState } from "react";
-
+import { Ionicons } from "@expo/vector-icons";
 import { getServices } from "@/src/storage/serviceStorage";
 import { Service } from "@/src/types/Service";
 
@@ -33,23 +32,33 @@ export default function Services() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.name}>
-              {item.titulo}
-            </Text>
+            <Text style={styles.name}>{item.titulo}</Text>
+            <Text style={styles.description}>{item.descricao}</Text>
 
-            <Text>{item.descricao}</Text>
+            <View style={styles.detailRow}>
+              <Ionicons name="folder-outline" size={15} color="#64748B" />
+              <Text style={styles.detail}>{item.categoria}</Text>
+            </View>
 
-            <Text>📂 {item.categoria}</Text>
+            <View style={styles.detailRow}>
+              <Ionicons name="cash-outline" size={15} color="#64748B" />
+              <Text style={styles.detail}>R$ {item.preco}</Text>
+            </View>
 
-            <Text>💰 R$ {item.preco}</Text>
+            <View style={styles.detailRow}>
+              <Ionicons name="call-outline" size={15} color="#64748B" />
+              <Text style={styles.detail}>{item.telefone}</Text>
+            </View>
 
-            <Text>📞 {item.telefone}</Text>
+            <View style={styles.detailRow}>
+              <Ionicons name="location-outline" size={15} color="#64748B" />
+              <Text style={styles.detail}>{item.regiao}</Text>
+            </View>
 
-            <Text>🌎 {item.regiao}</Text>
-
-            <Text>
-              📧 {item.prestadorEmail}
-            </Text>
+            <View style={styles.detailRow}>
+              <Ionicons name="mail-outline" size={15} color="#64748B" />
+              <Text style={styles.detail}>{item.prestadorEmail}</Text>
+            </View>
           </View>
         )}
       />
@@ -63,7 +72,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#EEF2FF",
     padding: 24,
   },
-
   title: {
     fontSize: 28,
     fontWeight: "bold",
@@ -72,7 +80,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 40,
   },
-
   card: {
     backgroundColor: "#fff",
     padding: 20,
@@ -80,12 +87,25 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: "#CBD5F5",
+    gap: 8,
   },
-
   name: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 4,
     color: "#1E3A8A",
+  },
+  description: {
+    color: "#334155",
+    marginBottom: 4,
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  detail: {
+    color: "#334155",
+    fontSize: 14,
   },
 });

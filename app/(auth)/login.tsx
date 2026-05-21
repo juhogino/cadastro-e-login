@@ -1,6 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useContext } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from "@/src/context/AuthContext";
 import { verifyUser } from "@/src/storage/authStorage";
 
@@ -32,20 +33,28 @@ export default function Login() {
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
-      <TextInput
-        placeholder="📧 E-mail"
-        placeholderTextColor="#94A3B8"
-        style={styles.input}
-        onChangeText={setEmail}
-      />
+      <View style={styles.inputWrapper}>
+        <Ionicons name="mail-outline" size={20} color="#94A3B8" />
+        <TextInput
+          placeholder="E-mail"
+          placeholderTextColor="#94A3B8"
+          style={styles.input}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+      </View>
 
-      <TextInput
-        placeholder="🔒 Senha"
-        placeholderTextColor="#94A3B8"
-        secureTextEntry
-        style={styles.input}
-        onChangeText={setSenha}
-      />
+      <View style={styles.inputWrapper}>
+        <Ionicons name="lock-closed-outline" size={20} color="#94A3B8" />
+        <TextInput
+          placeholder="Senha"
+          placeholderTextColor="#94A3B8"
+          secureTextEntry
+          style={styles.input}
+          onChangeText={setSenha}
+        />
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
@@ -60,7 +69,6 @@ export default function Login() {
   );
 }
 
-/* 👇 SEMPRE NO FINAL DO ARQUIVO */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -75,13 +83,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 30,
   },
-  input: {
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#fff",
-    padding: 15,
+    paddingHorizontal: 15,
     borderRadius: 12,
     marginBottom: 15,
     borderWidth: 1,
     borderColor: "#CBD5F5",
+  },
+  input: {
+    flex: 1,
+    paddingVertical: 15,
+    paddingLeft: 10,
     color: "#000",
   },
   button: {

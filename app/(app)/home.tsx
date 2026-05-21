@@ -2,6 +2,7 @@ import { AuthContext } from "@/src/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Home() {
   const router = useRouter();
@@ -15,13 +16,22 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        Olá, {user?.nome} 👋
+        Olá, {user?.nome}
       </Text>
 
       <View style={styles.card}>
-        <Text style={styles.info}>📧 {user?.email}</Text>
-        <Text style={styles.info}>👤 Tipo: {user?.tipo}</Text>
-        <Text style={styles.info}>🌎 Região: {user?.regiao}</Text>
+        <View style={styles.infoRow}>
+          <Ionicons name="mail-outline" size={16} color="#64748B" />
+          <Text style={styles.info}>{user?.email}</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Ionicons name="person-outline" size={16} color="#64748B" />
+          <Text style={styles.info}>Tipo: {user?.tipo}</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Ionicons name="location-outline" size={16} color="#64748B" />
+          <Text style={styles.info}>Região: {user?.regiao}</Text>
+        </View>
       </View>
 
       {user?.tipo === "prestador" && (
@@ -61,7 +71,6 @@ const styles = StyleSheet.create({
     padding: 24,
     justifyContent: "center",
   },
-
   title: {
     fontSize: 28,
     fontWeight: "bold",
@@ -69,7 +78,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 25,
   },
-
   card: {
     backgroundColor: "#fff",
     padding: 20,
@@ -77,14 +85,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#CBD5F5",
     marginBottom: 20,
+    gap: 12,
   },
-
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
   info: {
     fontSize: 16,
-    marginBottom: 10,
     color: "#334155",
   },
-
   button: {
     backgroundColor: "#4A6CF7",
     padding: 16,
@@ -92,7 +103,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 15,
   },
-
   secondaryButton: {
     backgroundColor: "#6366F1",
     padding: 16,
@@ -100,14 +110,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 15,
   },
-
   logoutButton: {
     backgroundColor: "#EF4444",
     padding: 16,
     borderRadius: 30,
     alignItems: "center",
   },
-
   buttonText: {
     color: "#fff",
     fontWeight: "bold",

@@ -1,6 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useContext } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from "@/src/context/AuthContext";
 import { UserType } from "@/src/types/User";
 
@@ -34,35 +35,49 @@ export default function Register() {
     <View style={styles.container}>
       <Text style={styles.title}>Cadastro</Text>
 
-      <TextInput
-        placeholder="👤 Nome"
-        placeholderTextColor="#94A3B8"
-        style={styles.input}
-        onChangeText={setNome}
-      />
+      <View style={styles.inputWrapper}>
+        <Ionicons name="person-outline" size={20} color="#94A3B8" />
+        <TextInput
+          placeholder="Nome"
+          placeholderTextColor="#94A3B8"
+          style={styles.input}
+          onChangeText={setNome}
+        />
+      </View>
 
-      <TextInput
-        placeholder="📧 E-mail"
-        placeholderTextColor="#94A3B8"
-        style={styles.input}
-        onChangeText={setEmail}
-      />
+      <View style={styles.inputWrapper}>
+        <Ionicons name="mail-outline" size={20} color="#94A3B8" />
+        <TextInput
+          placeholder="E-mail"
+          placeholderTextColor="#94A3B8"
+          style={styles.input}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+      </View>
 
-      <TextInput
-        placeholder="🔒 Senha"
-        placeholderTextColor="#94A3B8"
-        secureTextEntry
-        style={styles.input}
-        onChangeText={setSenha}
-      />
+      <View style={styles.inputWrapper}>
+        <Ionicons name="lock-closed-outline" size={20} color="#94A3B8" />
+        <TextInput
+          placeholder="Senha"
+          placeholderTextColor="#94A3B8"
+          secureTextEntry
+          style={styles.input}
+          onChangeText={setSenha}
+        />
+      </View>
 
-      <TextInput
-        placeholder="🔒 Confirmar senha"
-        placeholderTextColor="#94A3B8"
-        secureTextEntry
-        style={styles.input}
-        onChangeText={setConfirmar}
-      />
+      <View style={styles.inputWrapper}>
+        <Ionicons name="lock-closed-outline" size={20} color="#94A3B8" />
+        <TextInput
+          placeholder="Confirmar senha"
+          placeholderTextColor="#94A3B8"
+          secureTextEntry
+          style={styles.input}
+          onChangeText={setConfirmar}
+        />
+      </View>
 
       <Text style={styles.label}>Tipo de conta:</Text>
 
@@ -71,23 +86,40 @@ export default function Register() {
           style={[styles.option, tipo === "usuario" && styles.selected]}
           onPress={() => setTipo("usuario")}
         >
-          <Text>👤 Usuário</Text>
+          <Ionicons
+            name="person-outline"
+            size={18}
+            color={tipo === "usuario" ? "#4A6CF7" : "#334155"}
+          />
+          <Text style={[styles.optionText, tipo === "usuario" && styles.selectedText]}>
+            Usuário
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.option, tipo === "prestador" && styles.selected]}
           onPress={() => setTipo("prestador")}
         >
-          <Text>🛠 Prestador</Text>
+          <Ionicons
+            name="construct-outline"
+            size={18}
+            color={tipo === "prestador" ? "#4A6CF7" : "#334155"}
+          />
+          <Text style={[styles.optionText, tipo === "prestador" && styles.selectedText]}>
+            Prestador
+          </Text>
         </TouchableOpacity>
       </View>
 
-      <TextInput
-        placeholder="🌎 Região (ex: Sudeste)"
-        placeholderTextColor="#94A3B8"
-        style={styles.input}
-        onChangeText={setRegiao}
-      />
+      <View style={styles.inputWrapper}>
+        <Ionicons name="location-outline" size={20} color="#94A3B8" />
+        <TextInput
+          placeholder="Região (ex: Sudeste)"
+          placeholderTextColor="#94A3B8"
+          style={styles.input}
+          onChangeText={setRegiao}
+        />
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Cadastrar</Text>
@@ -100,7 +132,6 @@ export default function Register() {
   );
 }
 
-/* 👇 FORA DO COMPONENTE (CORRETO) */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -115,13 +146,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 30,
   },
-  input: {
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#fff",
-    padding: 15,
+    paddingHorizontal: 15,
     borderRadius: 12,
     marginBottom: 15,
     borderWidth: 1,
     borderColor: "#CBD5F5",
+  },
+  input: {
+    flex: 1,
+    paddingVertical: 15,
+    paddingLeft: 10,
     color: "#000",
   },
   button: {
@@ -153,15 +191,26 @@ const styles = StyleSheet.create({
   },
   option: {
     flex: 1,
+    flexDirection: "row",
+    gap: 8,
     backgroundColor: "#fff",
     padding: 12,
     borderRadius: 12,
     alignItems: "center",
+    justifyContent: "center",
     borderWidth: 1,
     borderColor: "#CBD5F5",
   },
   selected: {
     borderColor: "#4A6CF7",
     backgroundColor: "#E0E7FF",
+  },
+  optionText: {
+    color: "#334155",
+    fontWeight: "500",
+  },
+  selectedText: {
+    color: "#4A6CF7",
+    fontWeight: "600",
   },
 });
