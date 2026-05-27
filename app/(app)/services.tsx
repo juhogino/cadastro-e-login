@@ -2,10 +2,12 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from "react-native";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { getServices } from "@/src/storage/serviceStorage";
@@ -13,13 +15,36 @@ import { Service } from "@/src/types/Service";
 
 export default function Services() {
   const router = useRouter();
+  const { query: queryParam, categoria: categoriaParam } =
+    useLocalSearchParams<{ query?: string; categoria?: string }>();
+
   const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busca, setBusca] = useState(queryParam ?? "");
 
   useFocusEffect(
     useCallback(() => {
-      getServices().then(setServices);
+      let active = true;
+      setLoading(true);
+      getServices()
+        .then((data) => { if (active) setServices(data); })
+        .catch(() => {})
+        .finally(() => { if (active) setLoading(false); });
+      return () => { active = false; };
     }, [])
   );
+
+  const servicosFiltrados = services.filter((s) => {
+    const matchQuery = busca.trim()
+      ? s.titulo.toLowerCase().includes(busca.toLowerCase()) ||
+        s.descricao.toLowerCase().includes(busca.toLowerCase()) ||
+        s.categoria.toLowerCase().includes(busca.toLowerCase())
+      : true;
+    const matchCategoria = categoriaParam
+      ? s.categoria.toLowerCase() === categoriaParam.toLowerCase()
+      : true;
+    return matchQuery && matchCategoria;
+  });
 
   return (
     <View style={styles.container}>
@@ -27,10 +52,32 @@ export default function Services() {
         <Ionicons name="chevron-back" size={24} color="#1E3A8A" />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Serviços Disponíveis</Text>
+      <Text style={styles.title}>
+        {categoriaParam ? categoriaParam : "Serviços Disponíveis"}
+      </Text>
 
+      <View style={styles.searchBar}>
+        <Ionicons name="search-outline" size={16} color="#94A3B8" />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Buscar serviços..."
+          placeholderTextColor="#94A3B8"
+          value={busca}
+          onChangeText={setBusca}
+          returnKeyType="search"
+        />
+        {busca.length > 0 && (
+          <TouchableOpacity onPress={() => setBusca("")}>
+            <Ionicons name="close-circle" size={16} color="#94A3B8" />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      {loading ? (
+        <ActivityIndicator color="#4A6CF7" style={{ marginTop: 40 }} />
+      ) : (
       <FlatList
-        data={services}
+        data={servicosFiltrados}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
@@ -73,10 +120,11 @@ export default function Services() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Ionicons name="search-outline" size={40} color="#94A3B8" />
-            <Text style={styles.emptyText}>Nenhum serviço disponível</Text>
+            <Text style={styles.emptyText}>Nenhum serviço encontrado</Text>
           </View>
         }
       />
+      )}
     </View>
   );
 }
@@ -127,6 +175,24 @@ const styles = StyleSheet.create({
   detail: {
     color: "#334155",
     fontSize: 14,
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#CBD5F5",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 16,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    color: "#1E293B",
+    paddingVertical: 0,
   },
   empty: {
     alignItems: "center",
